@@ -2,21 +2,24 @@
 def code(a, b, message, n):
     alphabet, c = [chr(i) for i in range(97, 97 + 26)], ""
     for i in message:
-        nb = alphabet.index(i)
-        if n == 0:
-            nb += a
+        if i in alphabet:
+            nb = alphabet.index(i)
+            if n == 0:
+                nb += a
+            else:
+                nb -= a
+            c += alphabet[nb % 26]
+            x = a
+            b %= 26
+            a = b
+            if b < 10:
+                b += x
+            elif b < 20:
+                b = int(str(b)[-1]) * 2 + x
+            else:
+                b = int(str(b)[-1]) ** 2 + x
         else:
-            nb -= a
-        c += alphabet[nb % 26]
-        x = a
-        b %= 26
-        a = b
-        if b < 10:
-            b += x
-        elif b < 20:
-            b = int(str(b)[-1]) * 2 + x
-        else:
-            b = int(str(b)[-1]) ** 2 + x
+            c+=i
     return c
 
 
