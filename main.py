@@ -1,22 +1,19 @@
 from datetime import datetime
+import random
 
 
-def code(a, b, c, n):
+def code(a, b, c, n, y, m, d):
     if n == 0:
         c = cle(a, b, c, n)
-        c = sub(c, n)
+        c = sub(c, n, y, m, d)
     else:
-        c = sub(c, n)
+        c = sub(c, n, y, m, d)
         c = cle(a, b, c, n)
     return c
 
 
-def sub(c, n):
+def sub(c, n, y, m, d):
     alphabet = [chr(i) for i in range(97, 97 + 26)]
-    date = datetime.now()
-    y = date.year
-    m = date.month
-    d = date.day
     fact_26 = 403291461126605635584000000
     dec = pow(d + m, y + d, fact_26)
     Sub = []
@@ -66,19 +63,43 @@ def cle(a, b, message, n):
 
 def main():
     while True:
+        r = 1
         print('Saisir :\n 1 pour crypter,\n 2 pour decoder \n 3 pour quitter')
         n = input()
         if n.isdigit():
             if n == "1" or n == "2":
-                print("Veuillez-entrer la premiere clé")
-                a = input()
-                print("Veuillez-entrer la deuxième clé")
-                b = input()
+                if n == "2":
+                    print("Ce message a-t-il été envoyé aujourd'hui ? (O/N)")
+                    r = input()
+                if n == "1" or r.lower() == 'o':
+                    date = datetime.now()
+                    y = date.year
+                    m = date.month
+                    d = date.day
+                else:
+                    print("Veuillez entrer l'année d'écriture du message")
+                    y = int(input())
+                    print("Veuillez entrer le mois d'écriture du message")
+                    m = int(input())
+                    print("Veuillez entrer le jour d'écriture du message")
+                    d = int(input())
+                random.seed(pow(y + m, m + d))
+                a = random.randint(0, 25)
+                random.seed(pow(y + d, (m + d) * y, y ** y))
+                b = random.randint(0, 25)
+                d = 0
+                while a % 10 == 0 and b % 10 == 0:
+                    d += 1
+                    random.seed(pow(y + m, m + d) + d)
+                    a = random.randint(0, 25)
+                    random.seed(pow(y + d, (m + d) * y, y ** y) + d)
+                    b = random.randint(0, 25)
                 print("Veuillez-entrer le message")
                 c = input()
-                if a.isdigit() and b.isdigit():
-                    c = code(int(a), int(b), c.lower(), int(n) - 1)
-                    print(c)
+
+                if str(a).isdigit() and str(b).isdigit():
+                    c = code(int(a), int(b), c.lower(), int(n) - 1, y, m, d)
+                    print('\n' + c + '\n')
             elif n == "3":
                 break
 
